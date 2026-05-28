@@ -583,7 +583,8 @@ hr {
   'use strict';
 
   const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/model/';
-  const HAPPY_THRESHOLD = 0.7;
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const HAPPY_THRESHOLD = isMobile ? 0.20 : 0.78;
   const DETECT_INTERVAL = 250;
 
   const gate = document.getElementById('smile-gate');
