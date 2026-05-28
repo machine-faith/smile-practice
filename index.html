@@ -14,11 +14,14 @@
 
 :root {
   --highlight: #FFFF00;
-  --hl-pink: #FF2D9B;
-  --hl-lime: #7FFF00;
-  --hl-cyan: #00FFFF;
-  --hl-orange: #FF6B1A;
-  --hl-blue: #4444FF;
+  --hl-yellow: #FFFF00;
+  --hl-blue-link: #0000EE;
+  --hl-purple-link: #551A8B;
+  --hl-grey: #E6E6E6;
+  --hl-pink: #FFB6C1;
+  --hl-green: #90EE90;
+  --hl-cyan: #E0FFFF;
+  --hl-orange: #FFD700;
   --text: #000000;
   --bg-dark: #111111;
 }
@@ -53,6 +56,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 9999;
   background: #000;
   display: flex;
@@ -100,21 +104,25 @@ body {
 #gate-denied {
   position: relative;
   z-index: 3;
-  font-size: 28px;
-  padding: 8px 16px;
-  background: var(--highlight);
-  color: var(--text);
   display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--hl-red);
+  color: var(--hl-white);
+  border: 3px solid var(--hl-yellow);
+  max-width: 90%;
   text-align: center;
   line-height: 1.3;
 }
 
 #smile-meter-wrap {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 4;
+  bottom: 24px;
+  left: 12px;
+  width: calc(100% - 24px);
+  z-index: 10;
   padding: 0;
 }
 
@@ -132,7 +140,7 @@ body {
   width: 100%;
   height: 14px;
   background: rgba(255,255,255,0.15);
-  border-top: 2px solid var(--highlight);
+  border: 2px solid var(--highlight);
 }
 
 #smile-meter-fill {
@@ -162,6 +170,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 10000;
   pointer-events: none;
   display: none;
@@ -231,24 +240,21 @@ body {
 .font-serif { font-family: 'Georgia', 'Times New Roman', serif; -webkit-font-smoothing: auto; }
 .font-mono { font-family: 'Courier New', Courier, monospace; }
 
-/* Custom chaotic color classes for high contrast Yale feel */
+/* Custom Yale Art School color classes */
 .hl-yellow-black { background: #FFFF00; color: #000000; }
+.hl-grey-black { background: #E6E6E6; color: #000000; border: 1px solid #999999; }
+.hl-blue-white { background: #0000EE; color: #FFFFFF; }
+.hl-blue-yellow { background: #0000EE; color: #FFFF00; }
+.hl-purple-white { background: #551A8B; color: #FFFFFF; }
+.hl-purple-yellow { background: #551A8B; color: #FFFF00; }
+.hl-pink-black { background: #FFB6C1; color: #000000; }
+.hl-green-black { background: #90EE90; color: #000000; }
+.hl-cyan-black { background: #E0FFFF; color: #000000; }
+.hl-orange-black { background: #FFD700; color: #000000; }
+.hl-white-black { background: #FFFFFF; color: #000000; border: 1px solid #000000; }
+.hl-white-blue { background: #FFFFFF; color: #0000EE; border: 1px solid #0000EE; }
+.hl-white-purple { background: #FFFFFF; color: #551A8B; border: 1px solid #551A8B; }
 .hl-black-white { background: #000000; color: #FFFFFF; }
-.hl-pink-white { background: #FF2D9B; color: #FFFFFF; }
-.hl-pink-yellow { background: #FF2D9B; color: #FFFF00; }
-.hl-lime-black { background: #7FFF00; color: #000000; }
-.hl-lime-purple { background: #7FFF00; color: #4B0082; }
-.hl-cyan-black { background: #00FFFF; color: #000000; }
-.hl-cyan-red { background: #00FFFF; color: #FF0000; }
-.hl-orange-white { background: #FF6B1A; color: #FFFFFF; }
-.hl-orange-blue { background: #FF6B1A; color: #0000FF; }
-.hl-blue-yellow { background: #4444FF; color: #FFFF00; }
-.hl-blue-white { background: #4444FF; color: #FFFFFF; }
-.hl-purple-green { background: #8A2BE2; color: #00FF00; }
-.hl-purple-white { background: #8A2BE2; color: #FFFFFF; }
-.hl-red-white { background: #FF0000; color: #FFFFFF; }
-.hl-red-yellow { background: #FF0000; color: #FFFF00; }
-.hl-white-black { background: #FFFFFF; color: #000000; }
 
 .dashed-border { border: 2px dashed #000000; }
 .solid-border { border: 2px solid #FFFFFF; }
@@ -426,7 +432,10 @@ hr {
   <video id="gate-video" autoplay playsinline muted></video>
   <canvas id="gate-canvas"></canvas>
   <span id="gate-prompt">smile to enter :)</span>
-  <span id="gate-denied">no camera, no entry. try again.</span>
+  <div id="gate-denied">
+    <span style="font-size: 32px; font-weight: bold; margin-bottom: 16px; display: block;">we just want to make sure you are smiling</span>
+    <button id="not-smiling-btn" class="font-vt" style="font-size: 28px; background: var(--hl-yellow); color: var(--hl-black); border: 2px solid var(--hl-black); padding: 4px 16px; cursor: pointer; text-transform: uppercase;">i'm not</button>
+  </div>
   <div id="smile-meter-wrap">
     <span id="smile-meter-label">0% happy</span>
     <div id="smile-meter"><div id="smile-meter-fill"></div></div>
@@ -449,10 +458,10 @@ hr {
     <!-- NAVIGATION -->
     <nav class="font-mono">
       <a href="#home" class="hl-yellow-black font-vt" style="text-decoration: none; border: 1px solid #000;">home</a>
-      <a href="#music" class="hl-pink-white font-sans" style="text-decoration: underline;">music</a>
-      <a href="#shows" class="hl-lime-purple font-serif" style="font-style: italic;">shows</a>
+      <a href="#music" class="hl-pink-black font-sans" style="text-decoration: underline;">music</a>
+      <a href="#shows" class="hl-green-black font-serif" style="font-style: italic;">shows</a>
       <a href="#photos" class="hl-cyan-black font-mono" style="font-weight: bold; border: 2px dashed #000000;">photos</a>
-      <a href="#contact" class="hl-orange-white font-vt" style="text-transform: uppercase;">contact</a>
+      <a href="#contact" class="hl-orange-black font-vt" style="text-transform: uppercase;">contact</a>
     </nav>
 
     <!-- HOME -->
@@ -461,19 +470,19 @@ hr {
       <!--
       <div class="heading-img"><img src="assets/heading-home.png" alt="home"></div>
       -->
-      <h1><span class="hl hl-purple-white font-vt dashed-border" style="padding: 6px 20px; font-weight: bold;">Smile Practice</span></h1>
+      <h1><span class="hl hl-purple-yellow font-vt dashed-border" style="padding: 6px 20px; font-weight: bold;">Smile Practice</span></h1>
       <p class="bio">
-        <span class="hl hl-pink-yellow font-sans" style="font-size: 22px; display: inline-block; transform: rotate(-0.5deg); margin-bottom: 8px;">
+        <span class="hl hl-pink-black font-sans" style="font-size: 22px; display: inline-block; transform: rotate(-0.5deg); margin-bottom: 8px;">
           Smile Practice is a band from the internet. We make sounds that feel like
           remembering something that never happened.
         </span>
         <br>
-        <span class="hl hl-cyan-red font-serif" style="font-size: 21px; font-style: italic; display: inline-block; transform: rotate(0.8deg); margin-bottom: 8px; border-left: 5px solid red;">
+        <span class="hl hl-cyan-black font-serif" style="font-size: 21px; font-style: italic; display: inline-block; transform: rotate(0.8deg); margin-bottom: 8px; border-left: 5px solid red;">
           Formed in a parking lot,
           reformed in a group chat.
         </span>
         <br>
-        <span class="hl hl-lime-purple font-mono" style="font-size: 19px; letter-spacing: -1px; text-transform: uppercase; font-weight: bold; display: inline-block;">
+        <span class="hl hl-grey-black font-mono" style="font-size: 19px; letter-spacing: -1px; text-transform: uppercase; font-weight: bold; display: inline-block;">
           We are currently practicing smiling.
           It is going okay.
         </span>
@@ -485,25 +494,25 @@ hr {
     <!-- MUSIC / RELEASES -->
     <section id="music">
       <!-- PLACEHOLDER: replace heading-music.png with band-supplied hand-drawn PNG -->
-      <div class="section-heading"><span class="hl hl-orange-white font-sans dashed-border" style="font-weight: bold; font-size: 32px;">Music / Releases</span></div>
+      <div class="section-heading"><span class="hl hl-white-black font-sans dashed-border" style="font-weight: bold; font-size: 32px;">Music / Releases</span></div>
 
       <ul class="release-list">
         <!-- PLACEHOLDER: replace with real Bandcamp/Spotify links -->
         <li style="margin-bottom: 12px;">
-          <a href="#" class="hl-pink-yellow font-vt" style="font-size: 22px; text-decoration: underline;">Teeth Marks EP</a>
-          <span class="desc hl-blue-white font-mono" style="font-size: 17px; margin-left: 4px;"> — 4 tracks, recorded in a bathroom. 2024.</span>
+          <a href="#" class="hl-pink-black font-vt" style="font-size: 22px; text-decoration: underline;">Teeth Marks EP</a>
+          <span class="desc hl-grey-black font-mono" style="font-size: 17px; margin-left: 4px;"> — 4 tracks, recorded in a bathroom. 2024.</span>
         </li>
         <li style="margin-bottom: 12px;">
           <a href="#" class="hl-cyan-black font-serif" style="font-size: 20px; font-weight: bold;">Smile Practice I</a>
-          <span class="desc hl-red-yellow font-sans" style="font-size: 17px; margin-left: 4px;"> — debut full-length. sounds like drywall. 2023.</span>
+          <span class="desc hl-orange-black font-sans" style="font-size: 17px; margin-left: 4px;"> — debut full-length. sounds like drywall. 2023.</span>
         </li>
         <li style="margin-bottom: 12px;">
-          <a href="#" class="hl-purple-green font-mono" style="font-size: 19px; text-decoration: underline;">split w/ Frown Mechanics</a>
+          <a href="#" class="hl-purple-yellow font-mono" style="font-size: 19px; text-decoration: underline;">split w/ Frown Mechanics</a>
           <span class="desc hl-yellow-black font-vt" style="font-size: 18px; margin-left: 4px;"> — two songs each. cassette only. 2023.</span>
         </li>
         <li style="margin-bottom: 12px;">
-          <a href="#" class="hl-lime-black font-sans" style="font-size: 20px; text-transform: uppercase; font-style: italic;">demo</a>
-          <span class="desc hl-orange-white font-serif" style="font-size: 17px; margin-left: 4px; border-bottom: 1px dotted white;"> — three songs. recorded on a phone. 2022.</span>
+          <a href="#" class="hl-white-blue font-sans" style="font-size: 20px; text-transform: uppercase; font-style: italic;">demo</a>
+          <span class="desc hl-grey-black font-serif" style="font-size: 17px; margin-left: 4px; border-bottom: 1px dotted white;"> — three songs. recorded on a phone. 2022.</span>
         </li>
       </ul>
     </section>
@@ -513,16 +522,16 @@ hr {
     <!-- SHOWS / GIGS -->
     <section id="shows">
       <!-- PLACEHOLDER: replace heading-shows.png with band-supplied hand-drawn PNG -->
-      <div class="section-heading"><span class="hl hl-lime-black font-serif solid-border" style="font-size: 32px; font-weight: bold; letter-spacing: 1px;">Shows / Gigs</span></div>
+      <div class="section-heading"><span class="hl hl-green-black font-serif solid-border" style="font-size: 32px; font-weight: bold; letter-spacing: 1px;">Shows / Gigs</span></div>
 
       <ul class="shows-list">
         <!-- PLACEHOLDER: replace with real show dates -->
-        <li style="margin-bottom: 10px;"><span class="hl hl-lime-purple font-mono" style="font-size: 20px;">2026-07-12 / The Waiting Room / Melbourne</span></li>
-        <li style="margin-bottom: 10px;"><span class="hl hl-pink-yellow font-vt" style="font-size: 22px;">2026-07-19 / Marrickville Bowlo / Sydney</span></li>
-        <li style="margin-bottom: 10px;"><span class="hl hl-blue-white font-sans" style="font-size: 19px;">2026-08-02 / The Bearded Lady / Brisbane</span></li>
-        <li style="margin-bottom: 10px;"><span class="hl hl-orange-blue font-serif" style="font-size: 18px; font-style: italic;">2026-08-09 / UniBar / Adelaide</span></li>
-        <li style="margin-bottom: 10px;"><span class="hl hl-purple-green font-mono" style="font-size: 19px;">2026-08-16 / Mojos / Perth</span></li>
-        <li style="margin-bottom: 10px;"><span class="hl hl-red-yellow font-vt" style="font-size: 22px;">2026-09-01 / someone's garage / TBA</span></li>
+        <li style="margin-bottom: 10px;"><span class="hl hl-grey-black font-mono" style="font-size: 20px;">2026-07-12 / The Waiting Room / Melbourne</span></li>
+        <li style="margin-bottom: 10px;"><span class="hl hl-pink-black font-vt" style="font-size: 22px;">2026-07-19 / Marrickville Bowlo / Sydney</span></li>
+        <li style="margin-bottom: 10px;"><span class="hl hl-cyan-black font-sans" style="font-size: 19px;">2026-08-02 / The Bearded Lady / Brisbane</span></li>
+        <li style="margin-bottom: 10px;"><span class="hl hl-orange-black font-serif" style="font-size: 18px; font-style: italic;">2026-08-09 / UniBar / Adelaide</span></li>
+        <li style="margin-bottom: 10px;"><span class="hl hl-green-black font-mono" style="font-size: 19px;">2026-08-16 / Mojos / Perth</span></li>
+        <li style="margin-bottom: 10px;"><span class="hl hl-yellow-black font-vt" style="font-size: 22px;">2026-09-01 / someone's garage / TBA</span></li>
       </ul>
     </section>
 
@@ -547,15 +556,15 @@ hr {
     <!-- CONTACT / LINKS -->
     <section id="contact">
       <!-- PLACEHOLDER: replace heading-contact.png with band-supplied hand-drawn PNG -->
-      <div class="section-heading"><span class="hl hl-red-white font-mono" style="font-size: 32px; font-weight: bold; text-transform: uppercase;">Contact / Links</span></div>
+      <div class="section-heading"><span class="hl hl-blue-white font-mono" style="font-size: 32px; font-weight: bold; text-transform: uppercase;">Contact / Links</span></div>
 
       <ul class="contact-links">
         <!-- PLACEHOLDER: replace with real email and social links -->
         <li style="margin-bottom: 10px;"><a href="mailto:smilepractice@email.com" class="hl-yellow-black font-sans" style="font-size: 20px;">smilepractice@email.com</a></li>
-        <li style="margin-bottom: 10px;"><a href="#" class="hl-pink-white font-vt" style="font-size: 22px; text-decoration: none; border: 1px solid #fff;">instagram</a></li>
-        <li style="margin-bottom: 10px;"><a href="#" class="hl-lime-purple font-mono" style="font-size: 19px;">bandcamp</a></li>
-        <li style="margin-bottom: 10px;"><a href="#" class="hl-cyan-red font-serif" style="font-size: 20px; font-style: italic;">spotify</a></li>
-        <li style="margin-bottom: 10px;"><a href="#" class="hl-orange-white font-sans" style="font-size: 19px; text-transform: uppercase; font-weight: bold;">tiktok</a></li>
+        <li style="margin-bottom: 10px;"><a href="#" class="hl-pink-black font-vt" style="font-size: 22px; text-decoration: none; border: 1px solid #fff;">instagram</a></li>
+        <li style="margin-bottom: 10px;"><a href="#" class="hl-green-black font-mono" style="font-size: 19px;">bandcamp</a></li>
+        <li style="margin-bottom: 10px;"><a href="#" class="hl-cyan-black font-serif" style="font-size: 20px; font-style: italic;">spotify</a></li>
+        <li style="margin-bottom: 10px;"><a href="#" class="hl-orange-black font-sans" style="font-size: 19px; text-transform: uppercase; font-weight: bold;">tiktok</a></li>
       </ul>
     </section>
 
@@ -659,21 +668,31 @@ hr {
   function triggerEntry() {
     // 1. Freeze frame — draw current video to canvas
     const ctx = canvas.getContext('2d');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth || window.innerWidth;
+    canvas.height = video.videoHeight || window.innerHeight;
     ctx.save();
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0);
+    if (video.srcObject && video.videoWidth) {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0);
+    } else {
+      // Draw solid color/noise if camera was denied
+      ctx.fillStyle = '#0000EE'; // Authentic Yale Blue Link
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#FFFF00'; // Authentic Yale Yellow
+      ctx.font = 'bold 36px monospace';
+      ctx.fillText('NO SMILE DETECTED', canvas.width / 2 - 160, canvas.height / 2);
+    }
     ctx.restore();
     canvas.style.display = 'block';
     video.pause();
     prompt.style.display = 'none';
+    denied.style.display = 'none';
 
-    // 2. Glitch effect on overlay canvas
-    runGlitch(ctx, canvas.width, canvas.height);
+    // 2. Run classic Venetian Blinds transition with camera white flash
+    runClassicTransition(ctx, canvas.width, canvas.height);
 
-    // 3. After glitch, reveal site
+    // 3. After transition, reveal site
     setTimeout(function() {
       gate.classList.add('hidden');
       glitch.classList.remove('active');
@@ -688,68 +707,66 @@ hr {
     }, 1000);
   }
 
-  // ---- Glitch effect ----
-  function runGlitch(srcCtx, w, h) {
+  // ---- Classic Venetian Blinds Wipe Transition ----
+  function runClassicTransition(srcCtx, w, h) {
     glitch.width = window.innerWidth;
     glitch.height = window.innerHeight;
     glitch.style.display = 'block';
     glitch.classList.add('active');
 
     const gCtx = glitch.getContext('2d');
-    const imageData = srcCtx.getImageData(0, 0, w, h);
     let frame = 0;
-    const totalFrames = 12;
+    const totalFrames = 15;
+    const numBlinds = 12;
 
-    function drawGlitchFrame() {
-      if (frame >= totalFrames) return;
+    function drawWipeFrame() {
+      if (frame >= totalFrames) {
+        gCtx.clearRect(0, 0, glitch.width, glitch.height);
+        return;
+      }
 
       gCtx.clearRect(0, 0, glitch.width, glitch.height);
 
-      // Draw base image scaled to fill
-      gCtx.drawImage(canvas, 0, 0, glitch.width, glitch.height);
+      if (frame === 0) {
+        // Classic camera white flash frame
+        gCtx.fillStyle = '#FFFFFF';
+        gCtx.fillRect(0, 0, glitch.width, glitch.height);
+        frame++;
+        setTimeout(drawWipeFrame, 100); // 100ms flash
+        return;
+      }
 
-      // Scanlines
-      for (let y = 0; y < glitch.height; y += 3) {
-        if (Math.random() > 0.5) {
-          gCtx.fillStyle = 'rgba(0,0,0,0.3)';
-          gCtx.fillRect(0, y, glitch.width, 1);
+      const progress = (frame - 1) / (totalFrames - 1); // 0 to 1
+      const blindWidth = glitch.width / numBlinds;
+      const activeWidth = blindWidth * (1 - progress);
+
+      for (let i = 0; i < numBlinds; i++) {
+        const sx = i * (canvas.width / numBlinds);
+        const sWidth = canvas.width / numBlinds;
+        const dx = i * blindWidth;
+        const dWidth = activeWidth;
+
+        // Draw only the remaining visible part of each blind strip
+        if (dWidth > 0) {
+          gCtx.drawImage(
+            canvas,
+            sx, 0, sWidth, canvas.height,
+            dx, 0, dWidth, glitch.height
+          );
         }
       }
 
-      // Random slice displacement
-      const slices = 5 + Math.floor(Math.random() * 10);
-      for (let i = 0; i < slices; i++) {
-        const sy = Math.floor(Math.random() * glitch.height);
-        const sh = 5 + Math.floor(Math.random() * 40);
-        const dx = (Math.random() - 0.5) * 80 * (frame / totalFrames * 3);
-        gCtx.drawImage(glitch, 0, sy, glitch.width, sh, dx, sy, glitch.width, sh);
+      // Draw standard classic scanline overlay for textured retro TV feel
+      gCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      for (let y = 0; y < glitch.height; y += 4) {
+        gCtx.fillRect(0, y, glitch.width, 2);
       }
-
-      // Static noise
-      const noiseAmount = (frame / totalFrames) * 0.6;
-      const noiseData = gCtx.getImageData(0, 0, glitch.width, glitch.height);
-      const pixels = noiseData.data;
-      for (let i = 0; i < pixels.length; i += 4) {
-        if (Math.random() < noiseAmount) {
-          const v = Math.random() * 255;
-          pixels[i] = v;
-          pixels[i + 1] = v;
-          pixels[i + 2] = v;
-        }
-      }
-      gCtx.putImageData(noiseData, 0, 0);
-
-      // Color channel shift
-      gCtx.globalCompositeOperation = 'screen';
-      gCtx.fillStyle = 'rgba(255,255,0,' + (Math.random() * 0.15) + ')';
-      gCtx.fillRect(0, 0, glitch.width, glitch.height);
-      gCtx.globalCompositeOperation = 'source-over';
 
       frame++;
-      setTimeout(drawGlitchFrame, 70);
+      setTimeout(drawWipeFrame, 50); // 50ms per wipe frame
     }
 
-    drawGlitchFrame();
+    drawWipeFrame();
   }
 
   // ---- Init ----
@@ -758,7 +775,26 @@ hr {
 
     if (!cameraOk) {
       prompt.style.display = 'none';
-      denied.style.display = 'inline';
+      denied.style.display = 'flex';
+
+      // Setup the event listener for the "i'm not" button
+      const notSmilingBtn = document.getElementById('not-smiling-btn');
+      if (notSmilingBtn) {
+        notSmilingBtn.addEventListener('click', function() {
+          const textSpan = denied.querySelector('span');
+          if (textSpan) {
+            textSpan.textContent = 'fine, enter frowning then...';
+          }
+          notSmilingBtn.style.display = 'none';
+
+          setTimeout(function() {
+            if (!entered) {
+              entered = true;
+              triggerEntry();
+            }
+          }, 1200);
+        });
+      }
       return;
     }
 
