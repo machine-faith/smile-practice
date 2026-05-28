@@ -14,6 +14,11 @@
 
 :root {
   --highlight: #FFFF00;
+  --hl-pink: #FF2D9B;
+  --hl-lime: #7FFF00;
+  --hl-cyan: #00FFFF;
+  --hl-orange: #FF6B1A;
+  --hl-blue: #4444FF;
   --text: #000000;
   --bg-dark: #111111;
 }
@@ -222,6 +227,12 @@ body {
   line-height: 1.6;
 }
 
+.hl-pink { background: var(--hl-pink); color: #fff; }
+.hl-lime { background: var(--hl-lime); color: #000; }
+.hl-cyan { background: var(--hl-cyan); color: #000; }
+.hl-orange { background: var(--hl-orange); color: #fff; }
+.hl-blue { background: var(--hl-blue); color: #fff; }
+
 /* ============================================
    NAVIGATION
    ============================================ */
@@ -240,6 +251,11 @@ nav a {
   margin-bottom: 6px;
   display: inline-block;
 }
+
+nav a:nth-child(2) { background: var(--hl-pink); color: #fff; }
+nav a:nth-child(3) { background: var(--hl-lime); }
+nav a:nth-child(4) { background: var(--hl-cyan); }
+nav a:nth-child(5) { background: var(--hl-orange); color: #fff; }
 
 /* ============================================
    HEADINGS
@@ -364,6 +380,21 @@ p.hl, .bio .hl {
    DIVIDERS — Yale SoA style
    ============================================ */
 
+/* Section-specific highlight colors */
+#music .section-heading .hl { background: var(--hl-pink); color: #fff; }
+#music .release-list a { background: var(--hl-pink); color: #fff; }
+#music .release-list .desc { background: var(--hl-cyan); color: #000; }
+
+#shows .section-heading .hl { background: var(--hl-lime); color: #000; }
+#shows .shows-list li:nth-child(odd) .hl { background: var(--hl-lime); color: #000; }
+#shows .shows-list li:nth-child(even) .hl { background: var(--highlight); color: #000; }
+
+#photos .section-heading .hl { background: var(--hl-orange); color: #fff; }
+
+#contact .section-heading .hl { background: var(--hl-blue); color: #fff; }
+#contact .contact-links a { background: var(--hl-blue); color: #fff; }
+#contact .contact-links li:nth-child(even) a { background: var(--hl-pink); color: #fff; }
+
 hr {
   border: none;
   border-top: 3px solid var(--highlight);
@@ -398,7 +429,7 @@ hr {
   <span id="gate-prompt">smile to enter :)</span>
   <span id="gate-denied">no camera, no entry. try again.</span>
   <div id="smile-meter-wrap">
-    <span id="smile-meter-label">happiness: 0%</span>
+    <span id="smile-meter-label">0% happy</span>
     <div id="smile-meter"><div id="smile-meter-fill"></div></div>
   </div>
 </div>
@@ -433,10 +464,18 @@ hr {
       -->
       <h1><span class="hl">Smile Practice</span></h1>
       <p class="bio">
-        <span class="hl">
+        <span class="hl hl-pink">
           Smile Practice is a band from the internet. We make sounds that feel like
-          remembering something that never happened. Formed in a parking lot,
-          reformed in a group chat. We are currently practicing smiling.
+          remembering something that never happened.
+        </span>
+        <br>
+        <span class="hl hl-cyan">
+          Formed in a parking lot,
+          reformed in a group chat.
+        </span>
+        <br>
+        <span class="hl">
+          We are currently practicing smiling.
           It is going okay.
         </span>
       </p>
@@ -590,7 +629,7 @@ hr {
         // Update meter
         meterFill.style.width = pct + '%';
         meterLabel.style.display = 'block';
-        meterLabel.textContent = 'happiness: ' + Math.round(happy * 100) + '%';
+        meterLabel.textContent = Math.round(happy * 100) + '% happy';
         // Pulse when getting close
         if (pct > 70) {
           meterFill.classList.add('hot');
