@@ -221,6 +221,71 @@ body {
   padding: 30px 20px 80px 20px;
 }
 
+/* Annoying Retro Birthday Ad Popup */
+#birthday-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 20000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.popup-window {
+  background: var(--hl-yellow);
+  color: var(--hl-black);
+  border: 10px double var(--hl-pink);
+  max-width: 500px;
+  width: 100%;
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  box-shadow: 15px 15px 0px #000;
+}
+
+.popup-header {
+  background: var(--hl-pink);
+  color: #fff;
+  padding: 4px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 24px;
+  text-transform: uppercase;
+  border: 3px solid #000;
+  animation: flash-header 0.6s step-end infinite;
+}
+
+@keyframes flash-header {
+  50% { background: #0000EE; color: #FFFF00; }
+}
+
+.popup-close-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 26px;
+  text-align: center;
+}
+
+.popup-close-btn:hover {
+  background: var(--hl-pink);
+  color: #000;
+}
+
 /* ============================================
    HIGHLIGHT BLOCKS — THE CORE DESIGN
    Every piece of text gets a solid yellow block.
@@ -453,6 +518,20 @@ hr {
 
   <div class="site-background"></div>
 
+  <!-- Birthday Popup Ad -->
+  <div id="birthday-popup">
+    <div class="popup-window font-mono">
+      <button class="popup-close-btn" id="close-popup-btn">X</button>
+      <div class="popup-header">!!! SECURITY WARNING !!!</div>
+      <p class="font-vt" style="font-size: 42px; line-height: 1.1; margin: 20px 0; color: #0000EE; font-weight: bold; text-transform: uppercase; transform: rotate(-1.5deg);">
+        You're a fucking legend cunt
+      </p>
+      <div style="background: #000; color: #90EE90; padding: 6px; font-size: 16px; text-transform: uppercase; border: 2px solid #90EE90;">
+        SYSTEM ACCESS APPROVED // HAPPY BIRTHDAY LIAM
+      </div>
+    </div>
+  </div>
+
   <div class="site-content">
     <!-- NAVIGATION -->
     <nav class="font-mono">
@@ -469,18 +548,18 @@ hr {
       <!--
       <div class="heading-img"><img src="assets/heading-home.png" alt="home"></div>
       -->
-      <h1><span class="hl hl-purple-yellow font-vt dashed-border" style="padding: 6px 20px; font-weight: bold;">Smile Practice</span></h1>
+      <h1><span class="hl hl-purple-yellow font-vt dashed-border" style="padding: 6px 20px; font-weight: bold; text-transform: uppercase;">HAPPY BIRTHDAY</span></h1>
       <p class="bio">
-        <span class="hl hl-pink-black font-sans" style="font-size: 22px; display: inline-block; transform: rotate(-0.5deg); margin-bottom: 8px;">
-          This registry records continuous acoustic sessions. We do not maintain a permanent physical presence.
+        <span class="hl hl-pink-black font-sans" style="font-size: 28px; display: inline-block; transform: rotate(-0.8deg); margin-bottom: 12px; font-weight: bold;">
+          this is the
         </span>
         <br>
-        <span class="hl hl-cyan-black font-serif" style="font-size: 21px; font-style: italic; display: inline-block; transform: rotate(0.8deg); margin-bottom: 8px; border-left: 5px solid red;">
-          Captured in real-time. Distributed via unstructured communication streams.
+        <span class="hl hl-cyan-black font-serif" style="font-size: 38px; font-style: italic; display: inline-block; transform: rotate(1.2deg); margin-bottom: 12px; border-left: 8px solid red; padding-left: 12px; font-weight: bold; text-transform: uppercase;">
+          smile practice
         </span>
         <br>
-        <span class="hl hl-grey-black font-mono" style="font-size: 19px; letter-spacing: -1px; text-transform: uppercase; font-weight: bold; display: inline-block;">
-          The facial camera entry check is mandatory. Frown bypass events are automatically flagged.
+        <span class="hl hl-grey-black font-mono" style="font-size: 24px; letter-spacing: -1px; text-transform: lowercase; font-weight: bold; display: inline-block; transform: rotate(-0.3deg);">
+          website.
         </span>
       </p>
     </section>
@@ -689,12 +768,18 @@ hr {
     // 2. Run classic Venetian Blinds transition with camera white flash
     runClassicTransition(ctx, canvas.width, canvas.height);
 
-    // 3. After transition, reveal site
+    // 3. After transition, reveal site and pop up the annoying ad
     setTimeout(function() {
       gate.classList.add('hidden');
       glitch.classList.remove('active');
       glitch.style.display = 'none';
       mainSite.classList.add('revealed');
+
+      // Pop up the birthday ad
+      const popup = document.getElementById('birthday-popup');
+      if (popup) {
+        popup.style.display = 'flex';
+      }
 
       // Stop camera
       const stream = video.srcObject;
@@ -768,6 +853,17 @@ hr {
 
   // ---- Init ----
   async function init() {
+    // Setup close button handler for the birthday ad popup
+    const closeBtn = document.getElementById('close-popup-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        const popup = document.getElementById('birthday-popup');
+        if (popup) {
+          popup.style.display = 'none';
+        }
+      });
+    }
+
     const cameraOk = await startCamera();
 
     if (!cameraOk) {
